@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="shortcut icon" href="/assets/img/icon.png"/><!-- Link to title icon logo--> 
+  <title>Adam BC</title>
+  <style>
+
+    html { margin-top: 15px; }
+    #messages { list-style-type: none; margin: 0; padding: 0; }
+    #messages > li { padding: 0.5rem 1rem; }
+    #messages > li:nth-child(odd) { background: #efefef; }
+
+    .select {
+    position: absolute;
+    z-index: 10;
+    width: 168px;
+    height: 34px;
+    border: 1px solid #000;
+    }
+
+  </style>
+  <link rel="stylesheet" href="/assets/css/semantic.min.css">
+  <script src="/assets/js/jquery.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+<body bgcolor="white">
+  <div class="ui container">
+    <center> Peer Computing Networks Near You </center>
+    <hr>
+    <table width='100%' align='center' border='0' cellpadding='1px' cellspacing='1px'>
+      <tr>
+          <th width='20%'>Peer Network</th>
+          <th width='20%'>RAM Power</th>
+          <th width='20%'>Members</th>
+          <th width='20%'>Status</th>
+          <th width='20%'>Action</th>
+      </tr>
+    </table>
+    <table id='table' width='100%' align='center' border='0' cellpadding='5px' cellspacing='1px'>
+    </table>
+    <br/>
+  </div>
+  <script>
+
+    $(document).ready(()=>{
+     
+     $.getJSON('http://localhost:6553/peers')
+     
+     .done((data)=>{
+            var rows = '';
+            $.each(data, function (key, value) {
+                rows += `
+                <tr bgColor='#e2dfdf' align='center'>
+                <td width='20%'> ${data[key].admin[0].username} </td>
+                <td width='20%'> ${Object.keys(data[key].peers).length * 100} MBs </td>
+                <td width='20%'> ${Object.keys(data[key].peers).length} </td>
+                <td width='20%'><font color='red'> active </font></td>
+                <td width='20%'><a href="" id="url" style="text-decoration: none;"><font color='green'><strong> join  </strong></font></a></td>
+                </tr>
+                `;
+            });  
+            if(rows==''){
+               rows += `
+               <tr>
+                   <td colspan='5'> No computing networks are currently active. </td>
+               </tr>
+               `;
+            }
+            $('#table').append(rows);
+     })
+
+     .fail(()=>{
+         document.write("Adam BC did not detect a network.");
+     });
+
+    });
+
+</script>
+</body>
+</html>
+
